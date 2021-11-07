@@ -1,0 +1,35 @@
+﻿using Newtonsoft.Json;
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Threading.Tasks;
+
+namespace HCMApp.Data.ViewModels
+{
+    public class AddEmployeeVM
+    {
+        public string FirstName { get; set; }
+        public string MiddleName { get; set; }
+        public string LastName { get; set; }
+        public string Email { get; set; }
+        public string PhoneNumber { get; set; }
+        public DateTime Birthday { get; set; }
+        public string Gender { get; set; }
+        public string Address { get; set; }
+        public string Additional_Address { get; set; }
+        public string City { get; set; }
+        public string Region { get; set; }
+        public string Postal_Code { get; set; }
+        public string Country { get; set; }
+        public int Role { get; set; }
+        public int Department { get; set; }
+        public DateTime StartDate { get; set; }
+        public string PictureSrc { get; set; }
+        public string Salary { get; set; }
+
+        public override string ToString()
+        {
+            return JsonConvert.SerializeObject(this);
+        }
+    }
+}

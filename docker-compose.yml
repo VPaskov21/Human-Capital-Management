@@ -1,0 +1,12 @@
+services:
+    hcmapp:
+        build: .
+        ports:
+            - "8000:80"
+        depends_on:
+            - db
+    db:
+        image: "mcr.microsoft.com/mssql/server"
+        environment:
+            SA_PASSWORD: "HCM_App_Password123"
+            ACCEPT_EULA: "Y"

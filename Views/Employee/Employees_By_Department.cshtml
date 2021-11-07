@@ -1,0 +1,62 @@
+﻿@model IEnumerable<ViewEmployeesVM>
+@{
+    ViewData["Title"] = "Служители по отдел";
+    Layout = "~/Views/Shared/_LayoutEmployee.cshtml";
+    var department = ViewData["CurrentEmployeeDepartment"];
+}
+<div class="container my-3">
+    <div class="d-flex flex-column justify-content-center align-items-center">
+        <h3>Служители в отдел @department</h3>
+
+        <hr class="w-75">
+    </div>
+
+    @if (Model != null)
+    {
+        @if (Model.Count() > 0)
+        {
+            <div class="row text-center justify-content-center">
+                @foreach (var person in @Model)
+                {
+                    <!-- Team item -->
+                    <div class="col-xxl-3 col-sm-6 mb-5">
+                        <div class="d-flex flex-column align-items-center bg-white rounded shadow-sm py-5 px-4 h-100">
+                            @if (person.ImageSrc == null)
+                            {
+                                <img src="~/img/person-placeholder.jpg" alt="" width="100" class="profileImage img-fluid rounded-circle mb-3 img-thumbnail shadow-sm">
+                            }
+                            else
+                            {
+                                <img src="~/profile_images/@(person.ImageSrc)" alt="" width="100" class="profileImage img-fluid rounded-circle mb-3 img-thumbnail shadow-sm">
+                            }
+                            <h5 class="mb-0">@(person.FirstName) @(person.LastName)</h5>
+                            <span class="small text-uppercase text-muted">@(person.Role)</span>
+                            <ul class="social mb-0 list-inline mt-auto">
+                                <li class="list-inline-item">
+                                    <form asp-action="View_Employee" method="get" class="mt-1 mb-0">
+                                        <input type="hidden" name="Email" value="@(person.Email)">
+                                        <button type="submit" class="btn social-link"><i class="fas fa-user"></i></button>
+                                    </form>
+
+                                </li>
+                                <!--<li class="list-inline-item"><a href="#" class="social-link"><i class="fab fa-twitter"></i></a></li>
+                                <li class="list-inline-item"><a href="#" class="social-link"><i class="fab fa-instagram"></i></a></li>
+                                <li class="list-inline-item"><a href="#" class="social-link"><i class="fab fa-linkedin-in"></i></a></li>-->
+                            </ul>
+                        </div>
+                    </div><!-- End -->
+                }
+            </div>
+        }
+        else
+        {
+            <div class="container">
+                <div class="d-flex justify-content-center align-items-center">
+                    <h3>Няма други служители в този отдел.</h3>
+                </div>
+            </div>
+        }
+    }
+</div>
+
+

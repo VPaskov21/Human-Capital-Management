@@ -1,0 +1,129 @@
+﻿@{
+    ViewData["Title"] = "Начало";
+    Layout = "~/Views/Shared/_LayoutHR.cshtml";
+    var averageEmployeeAge = ViewData["EmployeesAverageAge"];
+    var averageEmployeeSalary = ViewData["EmployeesAverageSalary"];
+    var employeeCount = (int)ViewData["EmployeesCount"];
+    var leftEmployeeCount = (int)ViewData["LeftEmployeesCount"];
+    var employeeImageSrc = ViewData["ImageSource"] as ImageVM;
+    int pendingRequestsCount = (int)ViewData["pendingLeaveRequests"];
+    var salaryApproval = ViewData["SalaryApproval"];
+}
+<div class="container pb-5 mt-3 d-flex flex-column justify-content-center align-items-center">
+    <div class="d-flex justify-content-center align-items-center mt-3">
+        <h3>Добре дошли в таблото за човешки ресурси</h3>
+    </div>
+    <hr class="w-75">
+
+    @if (salaryApproval != null)
+    {
+        @if (salaryApproval.Equals("Success"))
+        {
+            <div class="w-75 alert alert-info d-flex align-items-center justify-content-center" role="alert">
+                Одобрението на заплатите завърши успешно.
+            </div>
+        }
+
+        @if (salaryApproval.Equals("NotAvailable"))
+        {
+            <div class="w-75 alert alert-info d-flex align-items-center justify-content-center" role="alert">
+                Одобрението на заплатите е приключено и ще бъде активно в началото на следващият месец.
+            </div>
+        }
+    }
+
+
+    @if (pendingRequestsCount > 0)
+    {
+        <div class="w-75 alert alert-info d-flex align-items-center justify-content-center" role="alert">
+            @if (pendingRequestsCount == 1)
+            {
+                @:Има 1 активна заявка за отпуска чакаща одобрение.
+            }
+            else
+            {
+                @:Има @pendingRequestsCount активни заявки за отпуска чакащи одобрение.
+            }
+
+            <a asp-action="Active_Absence_Requests" asp-controller="HR" class="ps-1 text-decoration-underline text-dark">Към заявките <i class="bi bi-arrow-right"></i></a>
+        </div>
+    }
+
+    <div class="w-100 p-4 mt-2 d-flex flex-column">
+        <div class="container">
+            <div class="d-flex flex-column flex-xl-row row text-center justify-content-center">
+                <div class="col-xl-6">
+                    <div class="card text-center btn-outline-light text-dark l-bg-cyan insight-card ">
+                        <div class="card-statistic-3">
+                            <div class="card-icon card-icon-large">
+                                <i class="fas fa-street-view"></i>
+                            </div>
+                            <div class="card-body order-card">
+                                <h4 class="card-title">Средна възраст на служителите</h4>
+                                <h5 class="pt-3 card-text">@averageEmployeeAge години</h5>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-xl-6">
+                    <div class="card text-center btn-outline-light text-dark l-bg-green insight-card">
+                        <div class="card-statistic-3">
+                            <div class="card-icon card-icon-large">
+                                <i class="fas fa-money-check"></i>
+                            </div>
+                            <div class="card-body">
+                                <h4 class="card-title">Средна заплата в компанията</h4>
+                                <h5 class="pt-3 card-text">@averageEmployeeSalary лева</h5>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-xl-6">
+                    <div class="card text-center btn-outline-light text-dark l-bg-orange insight-card">
+                        <div class="card-statistic-3">
+                            <div class="card-icon card-icon-large">
+                                <i class="fas fa-user-tag"></i>
+                            </div>
+                            <div class="card-body">
+                                <h4 class="card-title">Брой на настоящите служителите</h4>
+                                <h5 class="pt-3 card-text">
+                                    @if (employeeCount == 1)
+                                    {
+                                        @employeeCount @:служител
+                                    }
+                                    else
+                                    {
+                                        @employeeCount @:служители
+                                    }
+                                </h5>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-xl-6">
+                    <div class="card text-center btn-outline-light text-dark l-bg-cherry insight-card">
+                        <div class="card-statistic-3">
+                            <div class="card-icon card-icon-large">
+                                <i class="fas fa-user-slash"></i>
+                            </div>
+                            <div class="card-body">
+                                <h4 class="card-title">Брой на напусналите служители</h4>
+                                <h5 class="pt-3 card-text">
+                                    @if (leftEmployeeCount == 1)
+                                    {
+                                        @leftEmployeeCount @:служител
+                                    }
+                                    else
+                                    {
+                                        @leftEmployeeCount @:служители
+                                    }
+
+                                </h5>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

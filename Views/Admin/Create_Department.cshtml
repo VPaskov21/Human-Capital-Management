@@ -1,0 +1,61 @@
+﻿@{
+    ViewData["Title"] = "Създай отдел";
+    Layout = "~/Views/Shared/_LayoutAdmin.cshtml";
+    var info = ViewData["Information"];
+}
+@if (info != null)
+{
+    @if (info.Equals("DepartmentDuplicate"))
+    {
+        <div class="w-75 alert alert-info d-flex align-items-center justify-content-center" role="alert" id="alert1">
+            Съществува отдел със същото име.
+        </div>
+    }
+
+    @if (info.Equals("DepartmentCreated"))
+    {
+        <div class="w-75 alert alert-success d-flex align-items-center justify-content-center" role="alert">
+            Отделът е създаден успешно.
+        </div>
+    }
+
+    @if (info.Equals("ValidationFailed"))
+    {
+        <div class="w-75 alert alert-info d-flex align-items-center justify-content-center" role="alert">
+            Има грешка във въведените от вас данни и не могат да бъдат обработени.
+        </div>
+    }
+
+    @if (info.Equals("Error"))
+    {
+        <div class="w-75 alert alert-danger d-flex align-items-center justify-content-center" role="alert">
+            Случи се грешка при завършване на действието.
+        </div>
+    }
+}
+
+<div class="d-flex justify-content-center align-items-center">
+    <h3>Създай нов отдел</h3>
+</div>
+<hr class="w-75">
+
+<div class="w-75 p-4 d-flex flex-column">
+    <form method="post" asp-action="Submit_Department" id="createDepartmentForm">
+        <div class="row">
+            <h4>Информация за отдела</h4>
+        </div>
+
+        <hr width="30%">
+
+        <div class="col-12 pt-3">
+            <div class="form-floating">
+                <input type="text" class="form-control" placeholder="Име на отдел" name="DepartmentName" id="DepartmentName">
+                <label for="DepartmentName">Име на отдел</label>
+            </div>
+        </div>
+
+        <div class="d-flex justify-content-center pt-4">
+            <button type="submit" class="btn btn-primary">Създай</button>
+        </div>
+    </form>
+</div>

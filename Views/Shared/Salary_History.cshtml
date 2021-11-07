@@ -1,0 +1,325 @@
+﻿@model IEnumerable<SalaryHistoryRecordVM>
+@{
+    ViewData["Title"] = "История на получени заплати";
+    var userType = ViewData["UserType"] as UserType;
+    @if (userType.UserTypeName == "HR")
+    {
+        Layout = "~/Views/Shared/_LayoutHR.cshtml";
+    }
+    @if (userType.UserTypeName == "Employee")
+    {
+        Layout = "~/Views/Shared/_LayoutEmployee.cshtml";
+    }
+}
+<div class="container mt-3 d-flex flex-column justify-content-center align-items-center">
+    <div class="d-flex justify-content-center align-items-center">
+        <h3>История на получени заплати</h3>
+    </div>
+    <hr class="w-75">
+
+    <div class="mt-3 w-75 table-responsive">
+        <table class="table">
+            <thead class="table-light">
+                <tr>
+                    <th scope="col">Година</th>
+                    <th scope="col">Месец</th>
+                    <th scope="col">Брутна заплата</th>
+                    <th scope="col">Бонус</th>
+                    <th scope="col">Нетна получена сума</th>
+                    <th scope="col"></th>
+                </tr>
+            </thead>
+            <tbody>
+                @if (Model.Count() > 0)
+                {
+                    @foreach (var record in Model)
+                    {
+                        <tr>
+                            <td class="align-middle">@record.Year г.</td>
+                            <td class="w-25 align-middle">@record.Month</td>
+                            <td class="w-25 align-middle">@record.GrossSalary лв.</td>
+                            <td class="w-25 align-middle">
+                                @if (record.MonthBonus > 0)
+                                {
+                                    @(record.MonthBonus) @:лв.
+                                }
+                            </td>
+                            <td class="w-25 align-middle">@record.TotalSalaryReceived лв.</td>
+                            <td class="">
+                                <button type="button" class="btn btn-primary detailsButton"
+                                        data-bs-toggle="modal"
+                                        data-month="@(record.Month)"
+                                        data-year="@(record.Year)"
+                                        data-salary-gross="@(record.GrossSalary)"
+                                        @if (record.PaidLeaveUsed > 0) { @: data-paid-leave-days="@(record.PaidLeaveUsed)"
+                                         @: data-paid-leave-cost="@(record.PaidLeaveCost)"
+                                        }
+                                        @if (record.SickLeaveUsed > 0) { @: data-sick-leave-days="@(record.SickLeaveUsed)"
+                                         @: data-sick-leave-cost="@(record.SickLeaveCost)"
+                                        }
+                                        @if (record.UnpaidLeaveUsed > 0) { @: data-unpaid-leave-days="@(record.UnpaidLeaveUsed)"
+                                        }
+                                        @if (record.OtherLeaveUsed > 0) { @: data-other-leave-days="@(record.OtherLeaveUsed)"
+                                         @: data-other-leave-cost="@(record.OtherLeaveCost)"
+                                        }
+                                        @if (record.MonthBonus > 0) { @: data-bonus="@(record.MonthBonus)"
+                                        }
+                                        data-worked-out-days="@(record.WorkedOutDays)"
+                                        data-worked-out-salary="@(record.WorkedOutSalary)"
+                                        data-workdays-in-month="@(record.WorkDaysInMonth)"
+                                        data-bs-target="#salaryModal">
+                                    Детайли
+                                </button>
+                            </td>
+                        </tr>
+                    }
+                }
+            </tbody>
+        </table>
+    </div>
+</div>
+
+
+
+<!-- Modal -->
+<div class="modal fade" id="salaryModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+
+            <div class="modal-body pb-1">
+                <div class="d-flex justify-content-center align-items-center modal-title">
+                    <h3>Фиш за работна заплата</h3>
+                </div>
+
+                <hr class="text-primary" style="height:3px;">
+
+                <div class="d-flex flex-column justify-content-center align-items-center">
+                    <h6>БРУТНО ВЪЗНАГРАЖДЕНИЕ</h6>
+
+                    <h3 id="grossSalary"></h3>
+                </div>
+
+                <br />
+                <br />
+
+                <div>
+                    <h6>Информация за възнаграждение</h6>
+                </div>
+
+                <hr class="text-primary my-2" style="height:3px;">
+
+                <table class="table">
+                    <tr>
+                        <td class="ps-0">
+                            Месец
+                        </td>
+                        <td class="pe-0 text-end" id="month">
+                        </td>
+                    </tr>
+                    <tr>
+                        <td class="ps-0">
+                            Година
+                        </td>
+                        <td class="pe-0 text-end" id="year">
+                        </td>
+                    </tr>
+                    <tr>
+                        <td class="ps-0">
+                            Осигурителен доход
+                        </td>
+                        <td class="pe-0 text-end" id="SSI">
+                        </td>
+                    </tr>
+                </table>
+
+                <div class="mt-2">
+                    <h6>Информация за отработени дни</h6>
+                </div>
+
+                <hr class="text-primary my-2" style="height:3px;">
+
+                <table class="table">
+                    <tr>
+                        <td class="ps-0">
+                            Работни дни в месеца
+                        </td>
+                        <td class="pe-0 text-end" id="workDaysInMonth">
+                            
+                        </td>
+                    </tr>
+                    <tr>
+                        <td class="ps-0">
+                            Отработени дни
+                        </td>
+                        <td class="pe-0 text-end" id="workedOutDays">
+                            
+                        </td>
+                    </tr>
+
+                </table>
+                <div class="leave mt-2">
+                    <h6>Използвана отпуска</h6>
+                </div>
+
+                <hr class="text-primary my-2 leave" style="height:3px;">
+
+                <table class="table mb-4 leave">
+                    <tr id="paidLeaveRow" style="display: none;">
+                        <td class="ps-0">
+                            Платена отпуска
+                        </td>
+                        <td class="text-end" id="paidLeaveDays">
+                        </td>
+                        <td class="pe-0 text-end" id="paidLeaveCost">
+                        </td>
+                    </tr>
+                    <tr id="unpaidLeaveRow" style="display: none;">
+                        <td class="ps-0">
+                            Неплатена отпуска
+                        </td>
+                        <td class="text-end" id="unpaidLeaveDays">
+                        </td>
+                        <td class="pe-0 text-end">
+                            0.00 лв.
+                        </td>
+                    </tr>
+                    <tr id="sickLeaveRow" style="display: none;">
+                        <td class="ps-0">
+                            Болничен
+                        </td>
+                        <td class="text-end" id="sickLeaveDays">
+                        </td>
+                        <td class="pe-0 text-end" id="sickLeaveCost">
+                        </td>
+                    </tr>
+                    <tr id="otherLeaveRow" style="display: none;">
+                        <td class="ps-0">
+                            Друга причина
+                        </td>
+                        <td class="text-end" id="otherLeaveDays">
+                        </td>
+                        <td class="pe-0 text-end" id="otherLeaveCost">
+                        </td>
+                    </tr>
+                </table>
+
+                <div>
+                    <h6>Удръжки върху осигурителния доход</h6>
+                </div>
+
+                <hr class="text-primary my-2" style="height:3px;">
+
+                <table class="table pt-0">
+                    <tr>
+                        <td class="ps-0">
+                            <p class="my-auto ps-0 w-50" data-bs-toggle="tooltip" data-bs-placement="top" data-bs-html="true" title="Фондовете за ДОО, включващи:<br />фонд &quot;Пенсии&quot;: 6.58%,<br/>фонд &quot;ОЗМ&quot;: 1.4%,<br/>фонд &quot;Безработица&quot;: 0.4%">
+                                фондове за ДОО
+                            </p>
+                        </td>
+                        <td class="text-end" id="percentDOO">
+                            8.38 %
+                        </td>
+                        <td class="pe-0 text-end" id="valueDOO">
+                        </td>
+                    </tr>
+                    <tr>
+                        <td class="ps-0">
+                            <p class="my-auto ps-0 w-75" data-bs-toggle="tooltip" data-bs-placement="top" title="Фонд Допълнително Задължително Пенсионно Осигуряване">
+                                фонд "ДЗПО" в УПФ
+                            </p>
+                        </td>
+                        <td class="text-end">
+                            2.20 %
+                        </td>
+                        <td class="pe-0 text-end" id="valueDZPO">
+                        </td>
+                    </tr>
+                    <tr>
+                        <td class="ps-0">
+                            фонд "Здравно осигуряване"
+                        </td>
+                        <td class="text-end">
+                            3.20 %
+                        </td>
+                        <td class="pe-0 text-end" id="valueZO">
+                        </td>
+                    </tr>
+
+                    <tr>
+                        <td class="ps-0">
+                            Общо осигурителни вноски
+                        </td>
+                        <td class="text-end">
+                            13.78 %
+                        </td>
+                        <td class="pe-0 text-end" id="employeeSSC">
+                        </td>
+                    </tr>
+
+                    <tr>
+                        <td class="ps-0">
+                            ДДФЛ
+                        </td>
+                        <td class="text-end">
+                            10.00 %
+                        </td>
+                        <td class="pe-0 text-end" id="incomeTax">
+                        </td>
+                    </tr>
+
+                    <tr>
+                        <td class="ps-0 borderless-cell">
+                        </td>
+                        <td class="text-end borderless-cell">
+                        </td>
+                        <td class="pe-0 text-end borderless-cell">
+                        </td>
+                    </tr>
+
+                    <tr>
+                        <td class="ps-0">
+                            Общо удръжки от служителя
+                        </td>
+                        <td class="text-end">
+                        </td>
+                        <td class="pe-0 text-end" id="tec">
+                        </td>
+                    </tr>
+
+                    <tr id="netSalarybonusRow" style="display: none;">
+                        <td class="ps-0">
+                            <b>Нетна заплата</b>
+                        </td>
+                        <td class="text-end">
+                        </td>
+                        <td class="pe-0 text-end" id="netSalaryBeforeBonus">
+                        </td>
+                    </tr>
+
+                    <tr id="bonusRow" style="display: none;">
+                        <td class="ps-0">
+                            Бонус
+                        </td>
+                        <td class="text-end">
+                        </td>
+                        <td class="pe-0 text-end" id="bonus">
+                        </td>
+                    </tr>
+
+                    <tr>
+                        <td class="ps-0 borderless-cell">
+                            <b>Нетна получена сума</b>
+                        </td>
+                        <td class="text-end borderless-cell">
+                        </td>
+                        <td class="pe-0 text-end borderless-cell" id="netSalaryToReceive">
+                        </td>
+                    </tr>
+                </table>
+            </div>
+
+            <button type="button" class="btn btn-primary m-3" data-bs-dismiss="modal">Затвори</button>
+
+        </div>
+    </div>
+</div>

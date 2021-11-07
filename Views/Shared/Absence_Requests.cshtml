@@ -1,0 +1,88 @@
+﻿@model List<AbsenceRequestVM>
+@{
+    ViewData["Title"] = "Заявки за отпуска";
+    Layout = "~/Views/Shared/_LayoutEmployee.cshtml";
+    var info = ViewData["Information"];
+    var userType = ViewData["UserType"] as UserType;
+    @if (userType.UserTypeName == "HR")
+    {
+        Layout = "~/Views/Shared/_LayoutHR.cshtml";
+    }
+    @if (userType.UserTypeName == "Employee")
+    {
+        Layout = "~/Views/Shared/_LayoutEmployee.cshtml";
+    }
+}
+<div class="container w-75 my-3 d-flex flex-column justify-content-center align-items-center">
+    @if (info != null)
+    {
+        @if (info.Equals("CancelSuccess"))
+        {
+            <div class="w-75 alert alert-success d-flex align-items-center justify-content-center" role="alert">
+                Заявката е отказана успешно.
+            </div>
+        }
+        @if (info.Equals("Error"))
+        {
+            <div class="w-75 alert alert-danger d-flex align-items-center justify-content-center" role="alert">
+                Случи се непредвидена грешка.
+            </div>
+        }
+    }
+
+    <div class="d-flex justify-content-center align-items-center">
+        <h3>Вашите заявки за отпуска</h3>
+    </div>
+    <hr class="w-50">
+
+    @if (Model.Count() > 0)
+    {
+
+
+        <div class="container table-responsive">
+            <table class="table">
+                <thead>
+                    <tr>
+                        <th scope="col">Дата на отпуска</th>
+                        <th scope="col">Причина</th>
+                        <th scope="col">Статус на заявка</th>
+                        <th scope="col"></th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var absenceRequest in @Model)
+                    {
+                        <tr>
+                            <td class="align-middle">@absenceRequest.FromDate.ToString("dd.MM.yyyy") - @absenceRequest.ToDate.ToString("dd.MM.yyyy")</td>
+                            <td class="align-middle">@absenceRequest.Reason</td>
+                            <td class="align-middle">@absenceRequest.Status</td>
+                            <td class="">
+                                @if ((DateTime.UtcNow.Date.CompareTo(absenceRequest.FromDate) < 0) &&
+                  !absenceRequest.Status.Equals("отказана"))
+                                {
+                                    <div class="d-flex flex-row justify-content-center" style="height:40px;">
+                                        <form method="post" asp-action="Cancel_Absence_Request" asp-controller="Employee">
+                                            <input type="hidden" name="Email" value="@(absenceRequest.Email)">
+                                            <input type="hidden" name="FromDate" value="@(absenceRequest.FromDate)">
+                                            <input type="hidden" name="ToDate" value="@(absenceRequest.ToDate)">
+                                            <input type="hidden" name="Reason" value="@(absenceRequest.Reason)">
+                                            <button type="submit" class="btn btn-primary">Откажи</button>
+                                        </form>
+                                    </div>
+                                }
+                            </td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+    }
+    else
+    {
+        <div class="container">
+            <div class="d-flex justify-content-center align-items-center">
+                <h4>Нямате заявки за отпуска.</h4>
+            </div>
+        </div>
+    }
+</div>

@@ -1,0 +1,45 @@
+﻿@{
+    ViewData["Title"] = "Създай отдел";
+    Layout = "~/Views/Shared/_LayoutAdmin.cshtml";
+
+    var departments = ViewData["Departments"] as IEnumerable<Department>;
+}
+<div class="d-flex justify-content-center align-items-center">
+    <h3>Всички отдели в компанията</h3>
+</div>
+<hr class="w-75">
+
+<div>
+    <a class="btn btn-primary rounded mb-2" asp-action="Create_Department" asp-controller="Admin">
+        Създай отдел
+    </a>
+</div>
+
+<div class="container">
+    <table class="table">
+        <thead>
+            <tr>
+                <th scope="col">Име на отдел</th>
+                <th scope="col">Служители в отдела</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var department in departments)
+            {
+                <tr>
+                    <td class="w-50 align-middle">@department.DepartmentName</td>
+                    <td class="w-25 align-middle">
+                        @if (department.Users.Count() == 1)
+                        {
+                            @department.Users.Count() @:служител
+                        }
+                        else
+                        {
+                            @department.Users.Count() @:служителя
+                        }
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+</div>

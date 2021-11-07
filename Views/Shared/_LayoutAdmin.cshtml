@@ -1,0 +1,59 @@
+﻿<html>
+<head>
+    <link rel="stylesheet" href="~/css/bootstrap.min.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.5.0/font/bootstrap-icons.css">
+    <script src="~/js/bootstrap.bundle.min.js"></script>
+    <link rel="stylesheet" href="~/css/sidebars.css">
+    <script src="https://unpkg.com/@@popperjs/core@2/dist/umd/popper.min.js"></script>
+    <script src="https://unpkg.com/tippy.js@6/dist/tippy-bundle.umd.js"></script>
+    <script type="text/javascript" src="~/js/jquery-3.5.1.min.js"></script>
+    <script type="text/javascript" src="~/js/admin_script.js"></script>
+    <link rel="stylesheet" href="~/css/style.css">
+</head>
+<body>
+    <main>
+        <div class="d-flex flex-column flex-shrink-0 p-3 text-dark border-end" style="width: 280px;">
+            <a href="/" class="d-flex flex-wrap justify-content-center align-items-center mb-3 mb-md-0 me-md-auto text-dark text-decoration-none">
+
+                <img src="../img/logo-sm.png">
+
+                <h4 class="text-center">Администраторски панел</h4>
+            </a>
+            <hr>
+            <ul class="nav nav-pills flex-column mb-auto list-unstyled ps-0">
+                <li class="mb-1">
+                    <a class="btn btn-toggle link-dark align-items-center rounded" asp-action="Index" asp-controller="Admin">
+                        Начало
+                    </a>
+                </li>
+                <li class="mb-1">
+                    <a class="btn btn-toggle link-dark align-items-center rounded" asp-action="Departments" asp-controller="Admin">Отдели</a>
+                </li>
+                <li class="mb-1">
+                    <a class="btn btn-toggle link-dark align-items-center rounded" asp-action="Roles" asp-controller="Admin">Длъжности</a>
+                </li>
+                <li class="mb-1">
+                    <a class="btn btn-toggle link-dark align-items-center rounded" asp-action="Holidays" asp-controller="Admin">Празници и неработни дни</a>
+                </li>
+            </ul>
+            <hr>
+            <div class="dropdown">
+                <a href="#" class="d-flex align-items-center text-dark text-decoration-none dropdown-toggle" id="dropdownUser1" data-bs-toggle="dropdown" aria-expanded="false">
+                    <strong>Администратор</strong>
+                </a>
+                <ul class="dropdown-menu text-small" aria-labelledby="dropdownUser1" style="">
+                    <li>
+                        <form asp-action="Logout" asp-controller="Admin" method="post" class="mb-auto">
+                            <button type="submit" class="dropdown-item">Изход</button>
+                        </form>
+                    </li>
+                </ul>
+            </div>
+        </div>
+
+        <div class="w-100 overflow-auto pt-5 d-flex flex-column justify-content-start align-items-center">
+            @RenderBody()
+        </div>
+    </main>
+</body>
+</html>

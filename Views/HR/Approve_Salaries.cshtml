@@ -1,0 +1,151 @@
+﻿@using HCMApp.Data.Enums
+@model IEnumerable<EmployeeSalaryHistoryVM>
+@{
+    ViewData["Title"] = "Проверка и одобрение на заплатите";
+    Layout = "~/Views/Shared/_LayoutHR.cshtml";
+
+    var departments = ViewData["Departments"] as IEnumerable<Department>;
+    var counter = 0;
+    var monthNum = DateTime.UtcNow.Month - 1;
+    Month month = (Month)monthNum;
+}
+<div class="container mt-3 mb-5 d-flex flex-column justify-content-center align-items-center">
+    <div class="d-flex justify-content-center align-items-center">
+        <h3>Одобрение на заплатите за месец @month</h3>
+    </div>
+    <hr class="w-75">
+    <form method="post" asp-action="Submit_Salary_Approval" class="w-100 d-flex flex-column align-items-center">
+        <div class="accordion w-100 mt-2" id="accordionExample">
+
+            @foreach (var department in departments)
+            {
+                <div class="accordion-item">
+                    <h2 class="accordion-header d-flex flex-wrap" id="headingOne">
+                        <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapse@(counter)" aria-expanded="false" aria-controls="collapse@(counter)">
+                            Отдел @(department.DepartmentName)
+                        </button>
+                    </h2>
+                    <div id="collapse@(counter)" class="accordion-collapse collapse" aria-labelledby="headingOne" data-bs-parent="#accordionExample">
+                        <div class="accordion-body">
+                            <table class="table">
+                                <thead>
+                                    <tr>
+                                        <th scope="col">Име на служителя</th>
+                                        <th scope="col">Позиция</th>
+                                        <th scope="col">Брутна заплата</th>
+                                        <th scope="col">Използвана отпуска</th>
+                                        <th scope="col">Бонус за този месец</th>
+                                        <th scope="col">
+                                            Нетна сума за получаване
+                                        </th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    @for (int i = 0; i < Model.Count(); i++)
+                                    {
+                                        @if (Model.ElementAt(i).Department.ToLower().Equals(@department.DepartmentName.ToLower()))
+                                        {
+                                            <tr>
+                                                <td class="align-middle">
+                                                    <input type="hidden" asp-for="@Model.ToList()[i].FirstName" value="@Model.ToList()[i].FirstName" />
+                                                    <input type="hidden" asp-for="@Model.ToList()[i].LastName" value="@Model.ToList()[i].LastName" />
+                                                    <input type="hidden" asp-for="@Model.ToList()[i].Email" value="@Model.ToList()[i].Email" />
+                                                    @Model.ElementAt(i).FirstName @Model.ElementAt(i).LastName
+                                                </td>
+
+                                                <td class="w-25 align-middle">
+                                                    <input type="hidden" asp-for="@Model.ToList()[i].Role" value="@Model.ToList()[i].Role" />
+                                                    @Model.ElementAt(i).Role
+                                                </td>
+
+                                                <td class="w-25 align-middle salaryInfo">
+                                                    @Model.ElementAt(i).GrossSalary лв.
+                                                </td>
+
+                                                <td class="w-25 align-middle">
+                                                    @if (@Model.ElementAt(i).PaidLeaveUsed == 0 &&
+                                        @Model.ElementAt(i).UnpaidLeaveUsed == 0 &&
+                                        @Model.ElementAt(i).SickLeaveUsed == 0 &&
+                                        @Model.ElementAt(i).OtherLeaveUsed == 0)
+                                                    {
+                                                        <p class="my-auto">
+                                                            Няма
+                                                        </p>
+                                                    }
+
+                                                    @if (@Model.ElementAt(i).PaidLeaveUsed > 0)
+                                                    {
+                                                        <input type="hidden" asp-for="@Model.ToList()[i].PaidLeaveUsed" value="@Model.ToList()[i].PaidLeaveUsed" />
+                                                        <p class="my-auto px-auto mx-auto" data-bs-toggle="tooltip" data-bs-placement="top" data-bs-html="true"
+                                                           title="16.08.2021 г. - 19.08.2021г.">
+                                                            Платена отпуска: @Model.ElementAt(i).PaidLeaveUsed дни
+                                                        </p>
+                                                    }
+
+                                                    @if (@Model.ElementAt(i).UnpaidLeaveUsed > 0)
+                                                    {
+                                                        <input type="hidden" asp-for="@Model.ToList()[i].UnpaidLeaveUsed" value="@Model.ToList()[i].UnpaidLeaveUsed" />
+                                                        <p class="my-auto" data-bs-toggle="tooltip" data-bs-placement="top" title="Tooltip2">
+                                                            Неплатена отпуска: @Model.ElementAt(i).UnpaidLeaveUsed дни
+                                                        </p>
+                                                    }
+
+                                                    @if (@Model.ElementAt(i).SickLeaveUsed > 0)
+                                                    {
+                                                        <input type="hidden" asp-for="@Model.ToList()[i].SickLeaveUsed" value="@Model.ToList()[i].SickLeaveUsed" />
+                                                        <p class="my-auto" data-bs-toggle="tooltip" data-bs-placement="top" title="Tooltip3">
+                                                            Болничен: @Model.ElementAt(i).SickLeaveUsed дни
+                                                        </p>
+                                                    }
+
+                                                    @if (@Model.ElementAt(i).OtherLeaveUsed > 0)
+                                                    {
+                                                        <input type="hidden" asp-for="@Model.ToList()[i].OtherLeaveUsed" value="@Model.ToList()[i].OtherLeaveUsed" />
+                                                        <p class="my-auto" data-bs-toggle="tooltip" data-bs-placement="top" title="Tooltip4">
+                                                            Други причини: @Model.ElementAt(i).OtherLeaveUsed дни
+                                                        </p>
+                                                    }
+                                                </td>
+                                                <td class="w-25">
+                                                    <input type="checkbox" class="bonusCheckbox"> Бонус
+                                                    <div class="form-floating w-100" style="display: none;">
+                                                        <input type="number" class="form-control" placeholder="Бонус" id="bonus" asp-for="@Model.ToList()[i].MonthBonus" value="0">
+                                                        <label for="bonus">Бонус</label>
+                                                    </div>
+                                                </td>
+                                                <td class="w-25 align-middle">
+                                                    <input type="hidden" asp-for="@Model.ToList()[i].NetSumToReceive" value="@Model.ToList()[i].NetSumToReceive" />
+                                                    @Model.ElementAt(i).NetSumToReceive лв.
+                                                </td>
+                                            </tr>
+                                        }
+                                    }
+
+                                </tbody>
+                            </table>
+
+                            <!--<div>
+                                <input type="checkbox" class="bonusCheckbox"> Бонус за отдела
+                                <div class="form-floating" style="display: none;">
+                                    <input type="number" class="form-control" placeholder="Бонус за отдела" id="bonus">
+                                    <label for="bonus">Бонус за отдела</label>
+
+                                    <p class="ps-1 mt-1 text-muted"><i>При добавяне на бонус към заплатите на всички служители в отдела</i></p>
+                                </div>
+                            </div>-->
+                        </div>
+                    </div>
+                </div>
+
+                counter++;
+            }
+
+
+        </div>
+
+        <button type="submit" class="btn btn-primary mt-3 mb-3">
+            Одобри заплатите на служителите за месеца
+        </button>
+    </form>
+
+</div>

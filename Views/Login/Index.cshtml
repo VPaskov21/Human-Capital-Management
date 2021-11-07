@@ -1,0 +1,49 @@
+﻿@model HCMApp.Data.ViewModels.UserVM 
+@{ 
+    var loginInfo = ViewData["Login"];
+}
+<html>
+<head>
+    <link rel="stylesheet" href="~/css/bootstrap.min.css">
+    <script src="~/js/bootstrap.bundle.min.js"></script>
+
+    <link href="~/css/login.css" rel="stylesheet">
+</head>
+<body class="text-center">
+
+    <div class="container">
+        <main class="form-signin">
+            
+
+            <form asp-action="Login" method="post">
+                <img class="mb-4" src="~/img/logo-sm.png" alt="">
+                <h1 class="h3 mb-3 fw-normal">Моля, влезте във вашият профил</h1>
+
+                @if (loginInfo.Equals("badLogin"))
+                {
+                    <div class="alert alert-danger" role="alert">
+                        Грешно потребителско име или парола.
+                    </div>
+                }
+
+                <div class="form-floating">
+                    <input type="text" class="form-control" asp-for="Username" placeholder="username" required>
+                    <label asp-for="Username">Потребителско име</label>
+                </div>
+                <div class="form-floating">
+                    <input type="password" class="form-control" asp-for="Password" placeholder="Password" required>
+                    <label asp-for="Password">Парола</label>
+                </div>
+
+                <div class="checkbox mb-3">
+                    <label asp-for="RememberMe">
+                        <input type="checkbox" asp-for="RememberMe"> Запомни ме
+                    </label>
+                </div>
+                <button class="w-100 btn btn-lg btn-primary" type="submit">Вход</button>
+                <p class="mt-5 mb-3 text-muted">© 2021</p>
+            </form>
+        </main>
+    </div>
+</body>
+</html>

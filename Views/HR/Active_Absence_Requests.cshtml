@@ -1,0 +1,70 @@
+﻿@model List<AbsenceRequestVM>
+@{
+    ViewData["Title"] = "Активни заявки за отпуска";
+    Layout = "~/Views/Shared/_LayoutHR.cshtml";
+    var info = ViewData["Information"];
+}
+<div class="container my-3 d-flex flex-column justify-content-center align-items-center">
+    @if (info != null)
+    {
+        @if (info.Equals("ApproveSuccess"))
+        {
+            <div class="w-75 alert alert-success d-flex align-items-center justify-content-center" role="alert">
+                Заявката е одобрена успешно.
+            </div>
+        }
+        @if (info.Equals("Error"))
+        {
+            <div class="w-75 alert alert-danger d-flex align-items-center justify-content-center" role="alert">
+                Случи се непредвидена грешка.
+            </div>
+        }
+    }
+
+    <div class="d-flex justify-content-center align-items-center">
+        <h3>Активни заявки за отпуска</h3>
+    </div>
+    <hr class="w-75">
+
+    <div class="container table-responsive">
+        <table class="table">
+            <thead>
+                <tr>
+                    <th scope="col">Име на служител</th>
+                    <th scope="col">Дати за отпуска</th>
+                    <th scope="col">Причина</th>
+                    <th scope="col"></th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var absenceRequest in @Model)
+                {
+                    <tr>
+                        <td class="w-25 align-middle">@absenceRequest.EmployeeName</td>
+                        <td class="w-25 align-middle">@absenceRequest.FromDate.ToString("dd.MM.yyyy") - @absenceRequest.ToDate.ToString("dd.MM.yyyy")</td>
+                        <td class="w-25 align-middle">@absenceRequest.Reason</td>
+                        <td class="w-25">
+                            <div class="d-flex flex-row" style="height:40px;">
+                                <form method="post" asp-action="Approve_Absence_Request" asp-controller="HR">
+                                    <input type="hidden" name="Email" value="@(absenceRequest.Email)">
+                                    <input type="hidden" name="FromDate" value="@(absenceRequest.FromDate)">
+                                    <input type="hidden" name="ToDate" value="@(absenceRequest.ToDate)">
+                                    <input type="hidden" name="Reason" value="@(absenceRequest.Reason)">
+                                    <button type="submit" class="btn btn-success">Одобри</button>
+                                </form>
+
+                                <form method="post" class="ps-1" asp-action="Reject_Absence_Request" asp-controller="HR">
+                                    <input type="hidden" name="Email" value="@(absenceRequest.Email)">
+                                    <input type="hidden" name="FromDate" value="@(absenceRequest.FromDate)">
+                                    <input type="hidden" name="ToDate" value="@(absenceRequest.ToDate)">
+                                    <input type="hidden" name="Reason" value="@(absenceRequest.Reason)">
+                                    <button type="submit" class="btn btn-danger">Отхвърли</button>
+                                </form>
+                            </div>
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+</div>

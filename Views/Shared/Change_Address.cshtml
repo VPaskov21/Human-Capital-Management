@@ -1,0 +1,99 @@
+﻿@model AddressVM
+@{
+    ViewData["Title"] = "Профил - промяна на адрес";
+    var userType = ViewData["UserType"] as UserType;
+    @if (userType.UserTypeName == "HR")
+    {
+        Layout = "~/Views/Shared/_LayoutHR.cshtml";
+    }
+    @if (userType.UserTypeName == "Employee")
+    {
+        Layout = "~/Views/Shared/_LayoutEmployee.cshtml";
+    }
+
+    var countries = ViewData["Countries"] as IEnumerable<CountryVM>;
+}
+
+<div class="container mt-3 d-flex flex-column justify-content-center align-items-center">
+    <div class="d-flex justify-content-center align-items-center">
+        <h3>Променете своя адрес</h3>
+    </div>
+    <hr class="w-75">
+
+    <div class="w-75 pb-4 d-flex flex-column">
+        <form method="post" asp-action="Submit_Address_Changes" id="changeAddressForm">
+            <div class="row pt-5">
+                <h4>Адрес</h4>
+            </div>
+
+            <hr width="30%">
+
+            <div class="pb-2 pt-3">
+
+                <div class="col-12">
+                    <div class="form-floating">
+                        <select class="form-select pt-4" id="selectCountry" name="country" asp-for="Country" required>
+                            @foreach (var country in @countries)
+                            {
+                                @if (country.CountryName.Equals(Model.Country))
+                                {
+                                    <option value="@(country.CountryName)" selected>@country.CountryName</option>
+                                }
+                                else
+                                {
+                                    <option value="@(country.CountryName)">@country.CountryName</option>
+                                }
+                            }
+                        </select>
+                        <label for="selectCountry">Държава</label>
+                    </div>
+                </div>
+
+                <div class="col-12 pt-3">
+                    <div class="form-floating">
+                        <input class="form-control" placeholder="Област" list="regions" name="region" id="selectRegion" asp-for="Region" required>
+                        <datalist id="regions">
+                        </datalist>
+                        <label for="selectRegion">Област</label>
+                    </div>
+                </div>
+
+                <div class="row pt-3">
+                    <div class="col-md">
+                        <div class="form-floating">
+                            <input class="form-control" placeholder="Град" list="cities" name="city" id="selectCity" asp-for="City" required>
+                            <datalist id="cities">
+                            </datalist>
+                            <label for="selectCity">Град</label>
+                        </div>
+                    </div>
+
+                    <div class="col-md">
+                        <div class="form-floating">
+                            <input type="number" class="form-control" id="inputPostalCode" asp-for="Postal_Code" readonly required>
+                            <label asp-for="Postal_Code">Пощенски код</label>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="col-12 pt-3">
+                    <div class="form-floating">
+                        <input type="text" class="form-control" placeholder="Street address" asp-for="Address" required>
+                        <label asp-for="Address">Улица</label>
+                    </div>
+
+                    <div class="pt-3">
+                        <div class="form-floating">
+                            <input type="text" class="form-control" placeholder="Street address 2" asp-for="Additional_Address">
+                            <label asp-for="Additional_Address">Допълнение към адрес (незадължително)</label>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="d-flex justify-content-center pt-4">
+                    <button type="submit" class="btn btn-primary ">Запази промените</button>
+                </div>
+            </div>
+        </form>
+    </div>
+</div>

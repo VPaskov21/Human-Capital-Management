@@ -1,0 +1,75 @@
+﻿@model AbsenceRequestVM
+@{
+    ViewData["Title"] = "Заявка за отпуска";
+    var userType = ViewData["UserType"] as UserType;
+    var info = ViewData["Information"];
+    @if (userType.UserTypeName == "HR")
+    {
+        Layout = "~/Views/Shared/_LayoutHR.cshtml";
+    }
+    @if (userType.UserTypeName == "Employee")
+    {
+        Layout = "~/Views/Shared/_LayoutEmployee.cshtml";
+    }
+    var date_today = DateTime.UtcNow;
+}
+<div class="container mt-3 d-flex flex-column justify-content-center align-items-center">
+    @if (info != null)
+    {
+        @if (info.Equals("No available days"))
+        {
+            <div class="w-75 alert alert-danger d-flex align-items-center justify-content-center" role="alert">
+                Нямате достатъчно свободни дни!
+            </div>
+        }
+
+        @if (info.Equals("Success"))
+        {
+            <div class="w-75 alert alert-success d-flex align-items-center justify-content-center" role="alert">
+                Заявката ви е изпратена успешно.
+            </div>
+        }
+    }
+    <div class="d-flex justify-content-center align-items-center">
+        <h3>Заявка за отпуска</h3>
+    </div>
+    <hr class="w-75">
+
+    <div class="w-75 p-4 d-flex flex-column">
+
+        <form method="post" asp-action="Submit_Absence_Request" autocomplete="off"  id="absenceRequestForm">
+            <div class="col-12">
+                <div class="form-floating">
+                    <select class="form-select pt-4" id="selectReason" asp-for="Reason" required>
+                        <option value="" hidden>Избери причина</option>
+                    </select>
+                    <label for="selectReason">Причина</label>
+                </div>
+            </div>
+
+            <hr width="30%">
+
+            <div class="row pt-2">
+                <h4>Дати</h4>
+            </div>
+
+            <hr width="30%">
+
+            <div class="row pt-3">
+                <div class="col-md">
+                    <div class="input-group">
+                        <div class="input-group-text">От</div>
+                        <input type="date" class="form-control" asp-for="FromDate" min="@(date_today.ToString("yyyy-MM-dd"))" id="startDateAbsence">
+                        <div class="input-group-text">До</div>
+                        <input type="date" class="form-control" asp-for="ToDate" min="@(date_today.ToString("yyyy-MM-dd"))" id="endDateAbsence">
+                    </div>
+                </div>
+            </div>
+
+            <div class="d-flex justify-content-center pt-4">
+                <button type="submit" class="btn btn-primary ">Изпрати заявка</button>
+            </div>
+        </form>
+    </div>
+</div>
+

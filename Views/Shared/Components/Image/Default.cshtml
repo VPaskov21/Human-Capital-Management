@@ -1,0 +1,19 @@
+﻿@model ImageVM 
+@*
+    For more information on enabling MVC for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
+*@
+@{
+    var employeeImageSrc = ViewData["ImageSource"] as ImageVM;
+}
+@if (Model.ImageSrc != null)
+{
+    <a href="#" class="d-block link-dark text-decoration-none dropdown-toggle" id="dropdownUser1" data-bs-toggle="dropdown" aria-expanded="false">
+        <img src="~/profile_images/@(Model.ImageSrc)" alt="mdo" class="profileImageSmall rounded-circle">
+    </a>
+}
+else
+{
+    <a href="#" class="d-block link-dark text-decoration-none dropdown-toggle" id="dropdownUser1" data-bs-toggle="dropdown" aria-expanded="false">
+        <img src="~/img/person-placeholder.jpg" alt="mdo" class="profileImageSmall rounded-circle">
+    </a>
+}

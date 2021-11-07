@@ -1,0 +1,49 @@
+﻿@model IEnumerable<HolidayVM> 
+@{
+    ViewData["Title"] = "Празници и неработни дни";
+    Layout = "~/Views/Shared/_LayoutAdmin.cshtml";
+}
+<div class="d-flex justify-content-center align-items-center">
+    <h3>Празници и неработни дни за текущата година</h3>
+</div>
+<hr class="w-75">
+
+<form class="w-75" method="post" asp-action="Submit_Holidays" asp-controller="Admin">
+    <table class="table" id="tab_logic">
+        <thead>
+            <tr>
+                <th scope="col">Празник</th>
+                <th scope="col">Дата на празник</th>
+                <th scope="col" id="actualAbsenceDayCol">Дата на почивен ден*</th>
+            </tr>
+        </thead>
+
+        <tbody>
+            @for (int i = 0; i < Model.Count(); i++)
+            {
+                <tr>
+                    <th class="w-50 align-middle">
+                        <input type="hidden" asp-for="@Model.ToList()[i].HolidayName" value="@Model.ToList()[i].HolidayName" />
+                        @Model.ToList()[i].HolidayName
+                    </th>
+                    <td class="w-25 align-middle">
+                        <input type="date" class="form-control" asp-for="@Model.ToList()[i].HolidayDate" value="@Model.ToList()[i].HolidayDate.ToString("yyyy-MM-dd")" id="holidayDate">
+                    </td>
+                    <td class="w-25 align-middle">
+                        @if (@Model.ToList()[i].ActualAbsenceDay != null)
+                        {
+                            <input type="date" class="form-control" asp-for="@Model.ToList()[i].ActualAbsenceDay" value="@Model.ToList()[i].ActualAbsenceDay.Value.ToString("yyyy-MM-dd")" id="actualAbsenceDay">
+                        }
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+    <div class="w-100 d-flex flex-row justify-content-between">
+        <a id="add_row" class="btn btn-sm btn-primary">Добави празник</a><a id='delete_row' class="btn btn-sm btn-primary" hidden>Премахни празник</a>
+    </div>
+
+    <div class="w-100 d-flex flex-row justify-content-center mt-5">
+        <button type="submit" class="btn btn-primary btn-lg">Запази</button>
+    </div>
+</form>

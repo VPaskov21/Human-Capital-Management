@@ -1,0 +1,41 @@
+﻿@model ImageVM
+@{
+    ViewData["Title"] = "Профил - промяна на адрес";
+    var userType = ViewData["UserType"] as UserType;
+    @if (userType.UserTypeName == "HR")
+    {
+        Layout = "~/Views/Shared/_LayoutHR.cshtml";
+    }
+    @if (userType.UserTypeName == "Employee")
+    {
+        Layout = "~/Views/Shared/_LayoutEmployee.cshtml";
+    }
+}
+
+<div class="container mt-3 d-flex flex-column justify-content-center align-items-center">
+    <div class="d-flex justify-content-center align-items-center">
+        <h3>Променете своята профилна снимка</h3>
+    </div>
+    <hr class="w-75">
+
+    <div class="w-75 p-4 d-flex flex-column">
+        <form method="post" enctype="multipart/form-data" asp-action="Submit_Image_Changes">
+            <div class="row pt-5">
+                <h4>Снимка</h4>
+            </div>
+
+            <hr width="30%">
+
+            <div class="pb-2 pt-3">
+
+                <div class="input-group mb-3">
+                    <input type="file" class="form-control" name="file" asp-for="ImageSrc" accept="image/*" required>
+                </div>
+
+                <div class="d-flex justify-content-center pt-4">
+                        <button type="submit" class="btn btn-primary ">Запази промените</button>
+                </div>
+            </div>
+        </form>
+    </div>
+</div>

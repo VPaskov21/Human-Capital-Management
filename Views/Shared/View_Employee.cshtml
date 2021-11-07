@@ -1,0 +1,158 @@
+﻿@model ViewEmployeesVM
+@{
+    ViewData["Title"] = Model.FirstName + " " + Model.LastName;
+    Layout = "~/Views/Shared/_LayoutHR.cshtml";
+    var years = DateTime.UtcNow.Year - Model.Start_Date.Year;
+    var months = DateTime.UtcNow.Month - Model.Start_Date.Month;
+    var userType = ViewData["UserType"] as UserType;
+    @if (userType.UserTypeName == "HR")
+    {
+        Layout = "~/Views/Shared/_LayoutHR.cshtml";
+    }
+    @if (userType.UserTypeName == "Employee")
+    {
+        Layout = "~/Views/Shared/_LayoutEmployee.cshtml";
+    }
+}
+<div class="container pb-2 mt-3 d-flex flex-column justify-content-center align-items-center">
+    <div class="d-flex justify-content-center align-items-center">
+        <h3>@Model.FirstName @Model.LastName</h3>
+    </div>
+    <hr class="w-75">
+
+    <div class="w-75 pt-4 pb-5 mb-auto">
+        <div class="d-flex flex-column-reverse flex-lg-row align-items-center align-items-lg-start">
+            <div class="pr-2 col-12 col-lg-7 border-end">
+
+                @if (userType.UserTypeName == "HR")
+                {
+                    <h5 class="pt-3">
+                        <i class="far fa-user-circle"></i> Лична информация
+                    </h5>
+                    <hr width="30%">
+                    <p>
+                        <b>Email адрес</b>: @Model.Email
+                    </p>
+                    <p>
+                        <b>Дата започване на работа</b>: @Model.Start_Date.ToString("dd.MM.yyyy")
+                    </p>
+                    <p>
+                        <b>Телефонен номер</b>: @Model.PhoneNumber
+                    </p>
+                    <p>
+                        <b>Рождена дата</b>: @Model.Birthday.ToString("dd.MM.yyyy")
+                    </p>
+
+                    <h5 class="pt-3">
+                        <i class="far fa-address-card"></i> Адрес
+                    </h5>
+                    <hr width="30%">
+
+                    @if (Model.Address_Additional != null)
+                    {
+                        <p>
+                            <b>Улица</b>: @Model.Address @Model.Address_Additional
+                        </p>
+                    }
+                    else
+                    {
+                        <p>
+                            <b>Улица</b>: @Model.Address
+                        </p>
+                    }
+                    <p>
+                        <b>Град</b>: @Model.City
+                    </p>
+                    <p>
+                        <b>Област</b>: @Model.Region
+                    </p>
+                    <p>
+                        <b>Пощенски код</b>: @Model.Postal_Code
+                    </p>
+
+                    <h5 class="pt-3">
+                        <i class="fas fa-briefcase"></i> Работна информация
+                    </h5>
+                    <hr width="30%">
+                    <p>
+                        <b>Позиция</b>: @Model.Role
+                    </p>
+                    <p>
+                        <b>Отдел</b>: @Model.Department
+                    </p>
+                    @if (years > 0 && months > 0)
+                    {
+                        <p>
+                            <b>Трудов стаж</b>: @years год. и @months мес.
+                        </p>
+                    }
+                    <p>
+                        <b>Брутна заплата</b>: @Model.Salary лв.
+                    </p>
+                }
+                @if (userType.UserTypeName == "Employee")
+                {
+                    <h5 class="pt-3">
+                        <i class="far fa-user-circle"></i> Лична информация
+                    </h5>
+                    <hr width="30%">
+                    <p>
+                        <b>Email адрес</b>: @Model.Email
+                    </p>
+                    <p>
+                        <b>Телефонен номер</b>: @Model.PhoneNumber
+                    </p>
+                    <p>
+                        <b>Рождена дата</b>: @Model.Birthday.ToString("dd.MM.yyyy")
+                    </p>
+
+                    <h5 class="pt-3">
+                        <i class="fas fa-briefcase"></i> Работна информация
+                    </h5>
+                    <hr width="30%">
+                    <p>
+                        <b>Позиция</b>: @Model.Role
+                    </p>
+                    <p>
+                        <b>Отдел</b>: @Model.Department
+                    </p>
+                }
+
+
+            </div>
+
+            <div class="col-12 col-lg-5 pb-5 pb-lg-0 d-flex flex-column align-items-center pt-2">
+                @if (Model.ImageSrc == null)
+                {
+                    <img src="~/img/placeholder.jpg" class="profileImageBig img-fluid shadow img-thumbnail rounded-circle mb-2">
+                }
+                else
+                {
+                    <img src="~/profile_images/@(Model.ImageSrc)" class="profileImageBig img-fluid shadow img-thumbnail rounded-circle mb-2">
+                }
+
+                @if (userType.UserTypeName == "HR")
+                {
+                    <div class="d-flex flex-column justify-content-center pt-1 w-75">
+                        <form method="post" asp-action="Edit_Employee" asp-controller="HR">
+                            <input type="hidden" name="Email" value="@(Model.Email)">
+                            <button class="btn btn-primary mt-4 w-100"><i class="me-1 fas fa-user-edit"></i> Редактирай</button>
+                        </form>
+                    </div>
+                }
+
+            </div>
+        </div>
+    </div>
+
+    @if (userType.UserTypeName == "HR")
+    {
+        <div class="align-items-center pb-4">
+            <form method="post" asp-action="Delete_Employee" asp-controller="HR">
+                <input type="hidden" name="Username" value="@(Model.Username)">
+                <button class="btn btn-danger"><i class="me-1 fas fa-minus-circle"></i> Премахни служител</button>
+            </form>
+        </div>
+    }
+
+</div>

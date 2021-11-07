@@ -1,0 +1,86 @@
+﻿@{
+    var userFullName = ViewData["UserFullName"];
+    Layout = "~/Views/Shared/_LayoutEmployee.cshtml";
+
+    var totalLeaveDays = ViewData["TotalLeaveDays"];
+    var availableLeaveDays = ViewData["AvailableLeaveDays"];
+}
+<div class="container mt-3 d-flex flex-column justify-content-center align-items-center">
+    <div class="d-flex justify-content-center align-items-center mt-3">
+        <h3>Добре дошли в таблото за служители, @userFullName</h3>
+    </div>
+    <hr class="w-75">
+
+    <div class="w-100 p-4 mt-2 d-flex flex-column">
+        <div class="container">
+            <div class="d-flex flex-column flex-xl-row row text-center justify-content-center">
+                <div class="col-xl-6">
+                    <div class="card text-center btn-outline-light text-dark l-bg-green insight-card ">
+                        <div class="card-statistic-3">
+                            <a asp-action="Profile" asp-controller="Employee" class="text-decoration-none text-white">
+                                <div class="card-icon card-icon-large">
+                                    <i class="fas fa-table"></i>
+                                </div>
+                                <div class="card-body order-card">
+                                    <h4 class="card-title">Информация за вашата позиция</h4>
+                                    <h5 class="pt-3 card-text">
+                                        <i class="bi bi-arrow-right-square"></i>
+                                    </h5>
+                                </div>
+                            </a>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-xl-6">
+                    <div class="card text-center btn-outline-light text-dark l-bg-cyan insight-card ">
+                        <div class="card-statistic-3">
+                            <a asp-action="Request_Absence" asp-controller="Employee" class="text-decoration-none text-white">
+                                <div class="card-icon card-icon-large">
+                                    <i class="far fa-calendar-check"></i>
+                                </div>
+                                <div class="card-body order-card">
+                                    <h4 class="card-title">Заяви отпуска</h4>
+                                    <h5 class="pt-3 card-text">
+                                        <i class="bi bi-arrow-right-square"></i>
+                                    </h5>
+                                </div>
+                            </a>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-xl-6">
+                    <div class="card text-center btn-outline-light text-dark l-bg-gold insight-card ">
+                        <div class="card-statistic-3">
+                            <a asp-controller="Employee" asp-action="Salary_History" class="text-decoration-none text-white">
+                                <div class="card-icon card-icon-large">
+                                    <i class="fas fa-file-invoice-dollar"></i>
+                                </div>
+                                <div class="card-body order-card">
+                                    <h4 class="card-title">Вижте история на заплатите</h4>
+                                    <h5 class="pt-3 card-text">
+                                        <i class="bi bi-arrow-right-square"></i>
+                                    </h5>
+                                </div>
+                            </a>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-xl-6">
+                    <div class="card text-center btn-outline-light text-dark l-bg-orange insight-card ">
+                        <div class="card-statistic-3">
+                            <div class="card-icon card-icon-large">
+                                <i class="far fa-calendar"></i>
+                            </div>
+                            <div class="card-body order-card">
+                                <h4 class="card-title">Налична отпуска за ползване</h4>
+                                <h5 class="pt-3 card-text">
+                                    @availableLeaveDays/@totalLeaveDays дни
+                                </h5>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

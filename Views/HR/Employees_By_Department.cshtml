@@ -1,0 +1,78 @@
+﻿@model IEnumerable<ViewEmployeesVM>
+@{
+    ViewData["Title"] = "Служители по отдел";
+    Layout = "~/Views/Shared/_LayoutHR.cshtml";
+    var departments = ViewData["Departments"] as IEnumerable<Department>;
+    var selectedDepartment = ViewData["SelectedDepartment"];
+}
+<div class="container mt-3 mb-5">
+    <div class="d-flex flex-column justify-content-center align-items-center">
+        <h3>Служители по отдел</h3>
+
+        <hr class="w-75">
+
+        <form method="get" class="w-75 pb-3 d-flex flex-row justify-content-center align-items-center" asp-action="ViewEmployeesByDepartment">
+
+            <select class="form-select form-select-lg w-50" id="department" name="department" required>
+                @if (selectedDepartment == null)
+                {
+                    <option selected value="" hidden>Изберете отдел</option>
+                }
+
+                @foreach (var dep in @departments)
+                {
+                    @if (dep.DepartmentName.Equals(selectedDepartment))
+                    {
+                        <option value="@(dep.DepartmentName)" asp-route="@(dep.DepartmentName)" selected>@dep.DepartmentName</option>
+                    }
+                    else
+                    {
+                        <option value="@(dep.DepartmentName)" asp-route="@(dep.DepartmentName)">@dep.DepartmentName</option>
+                    }
+
+                }
+            </select>
+
+            <button type="submit" class="btn btn-primary ms-2">Приложи филтъра</button>
+        </form>
+    </div>
+    @if (Model != null)
+    {
+        @if (Model.Count() > 0)
+        {
+            <div class="row text-center justify-content-center">
+                @foreach (var person in @Model)
+                {
+                    <!-- Team item -->
+                    <div class="col-xxl-3 col-sm-6 mb-3">
+                        <form asp-action="View_Employee" method="get" class="mt-1 mb-0 h-100">
+                            <input type="hidden" name="Email" value="@(person.Email)">
+                            <button type="submit" class="submitButton w-100 h-100">
+                                <div class="d-flex flex-column align-items-center bg-white rounded shadow-sm py-4 px-3 h-100">
+                                    @if (person.ImageSrc == null)
+                                    {
+                                        <img src="~/img/person-placeholder.jpg" alt="" width="100" class="profileImage img-fluid rounded-circle mb-3 img-thumbnail shadow-sm">
+                                    }
+                                    else
+                                    {
+                                        <img src="~/profile_images/@(person.ImageSrc)" alt="" width="100" class="profileImage img-fluid rounded-circle mb-3 img-thumbnail shadow-sm">
+                                    }
+                                    <h5 class="mb-0">@(person.FirstName) @(person.LastName)</h5>
+                                    <span class="small text-uppercase text-muted mt-1">@(person.Role)</span>
+                                </div>
+                            </button>
+                        </form>
+                    </div><!-- End -->
+                }
+            </div>
+        }
+        else
+        {
+            <div class="container">
+                <div class="d-flex justify-content-center align-items-center">
+                    <h4>Няма служители в избраният от вас отдел.</h4>
+                </div>
+            </div>
+        }
+    }
+</div>

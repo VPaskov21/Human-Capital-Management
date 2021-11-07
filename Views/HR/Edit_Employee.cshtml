@@ -1,0 +1,219 @@
+﻿@model ViewEmployeesVM
+@{
+    ViewData["Title"] = "Редактиране на служител";
+    Layout = "~/Views/Shared/_LayoutHR.cshtml";
+
+    var departments = ViewData["Departments"] as IEnumerable<Department>;
+    var countries = ViewData["Countries"] as IEnumerable<CountryVM>;
+
+    var info = ViewData["Information"];
+}
+<div class="container pb-5 mb-auto mt-3 d-flex flex-column justify-content-center align-items-center">
+    @if (info != null)
+    {
+        @if (info.Equals("ValidationFailed"))
+        {
+            <div class="w-75 alert alert-info d-flex align-items-center justify-content-center" role="alert">
+                Има грешка във въведените от вас данни и не могат да бъдат обработени.
+            </div>
+        }
+    }
+
+    <div class="d-flex justify-content-center align-items-center">
+        <h3>Редактиране на служител</h3>
+    </div>
+    <hr class="w-75">
+
+    <div class="w-75 p-4 d-flex flex-column">
+
+
+        <form asp-action="Edit_Employee_Submit" id="editEmployeeForm" enctype="multipart/form-data" method="post">
+
+            <div class="row">
+                <h4>Информация за служителя</h4>
+            </div>
+
+            <hr width="30%">
+
+            <div class="col-12 pt-3">
+                <div class="col-md">
+                    <div class="form-floating">
+                        <input type="text" class="form-control" placeholder="First name" asp-for="FirstName" readonly>
+                        <label asp-for="FirstName">Име</label>
+                    </div>
+                </div>
+
+                <div class="col-md pt-3">
+                    <div class="form-floating">
+                        <input type="text" class="form-control" placeholder="Middle name" asp-for="MiddleName" readonly>
+                        <label asp-for="MiddleName">Презиме</label>
+                    </div>
+                </div>
+
+                <div class="col-md pt-3">
+                    <div class="form-floating">
+                        <input type="text" class="form-control" placeholder="Last name" asp-for="LastName">
+                        <label asp-for="LastName">Фамилия</label>
+                    </div>
+                </div>
+
+                <div class="col-md pt-3">
+                    <div class="form-floating">
+                        <input type="email" class="form-control" placeholder="Email address" id="inputEmail" asp-for="Email" readonly>
+                        <label asp-for="Email">Email адрес</label>
+                    </div>
+                </div>
+            </div>
+
+            <div class="row pt-3">
+                <div class="col-md">
+                    <div class="form-floating">
+                        <input type="text" class="form-control" placeholder="Phone Number" asp-for="PhoneNumber">
+                        <label asp-for="PhoneNumber">Телефонен номер</label>
+                    </div>
+                </div>
+
+                <div class="col-md">
+                    <div class="form-floating">
+                        <input type="date" class="form-control" placeholder="Birthday" asp-for="Birthday" readonly>
+                        <label asp-for="Birthday">Рождена дата</label>
+                    </div>
+                </div>
+            </div>
+
+            <div class="row pt-5">
+                <h4>Адрес</h4>
+            </div>
+
+            <hr width="30%">
+
+            <div class="pb-2 pt-3">
+
+                <div class="col-12">
+                    <div class="form-floating">
+                        <select class="form-select pt-4" id="selectCountry" name="country" asp-for="Country" required>
+                            @foreach (var country in @countries)
+                            {
+                                @if (country.CountryName.Equals(Model.Country))
+                                {
+                                    <option value="@(country.CountryName)" selected>@country.CountryName</option>
+                                }
+                                else
+                                {
+                                    <option value="@(country.CountryName)">@country.CountryName</option>
+                                }
+                            }
+                        </select>
+                        <label for="selectCountry">Държава</label>
+                    </div>
+                </div>
+
+                <div class="col-12 pt-3">
+                    <div class="form-floating">
+                        <input type="text" class="form-control" placeholder="Област" list="regions" name="region" id="selectRegion" asp-for="Region">
+                        <datalist id="regions">
+                        </datalist>
+                        <label for="selectRegion">Област</label>
+                    </div>
+                </div>
+
+                <div class="row pt-3">
+                    <div class="col-md">
+                        <div class="form-floating">
+                            <input type="text" class="form-control" placeholder="Град" list="cities" name="city" id="selectCity" asp-for="City">
+                            <datalist id="cities">
+                            </datalist>
+                            <label for="selectCity">Град</label>
+                        </div>
+                    </div>
+
+                    <div class="col-md">
+                        <div class="form-floating">
+                            <input type="number" class="form-control" id="inputPostalCode" asp-for="Postal_Code" readonly>
+                            <label asp-for="Postal_Code">Пощенски код</label>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="col-12 pt-3">
+                    <div class="form-floating">
+                        <input type="text" class="form-control" placeholder="Street address" asp-for="Address">
+                        <label asp-for="Address">Улица</label>
+                    </div>
+
+                    <div class="pt-3">
+                        <div class="form-floating">
+                            <input type="text" class="form-control" placeholder="Street address 2" asp-for="Address_Additional">
+                            <label asp-for="Address_Additional">Допълнение към адрес (незадължително)</label>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+
+            <div class="row pt-5">
+                <h4>Работна информация</h4>
+            </div>
+
+            <hr width="30%">
+
+            <div class="pb-2 pt-3">
+
+                <div class="row pt-3">
+                    <div class="col-md">
+                        <div class="form-floating">
+                            <select class="form-select pt-4" id="selectDepartment" name="department" asp-for="Department" required>
+                                @foreach (var dep in @departments)
+                                {
+                                    @if (dep.DepartmentName.Equals(Model.Department))
+                                    {
+                                        <option value="@(dep.Id)" selected>@dep.DepartmentName</option>
+                                    }
+                                    else
+                                    {
+                                        <option value="@(dep.Id)">@dep.DepartmentName</option>
+                                    }
+                                }
+                            </select>
+                            <label for="selectDepartment">Отдел</label>
+                        </div>
+                    </div>
+
+                    <div class="col-md">
+                        <div class="form-floating">
+                            <select class="form-select pt-4" id="selectRole" name="role" asp-for="Role" required>
+                                <option value="Длъжност" hidden>Избери длъжност</option>
+                            </select>
+                            <label for="selectRole">Длъжност</label>
+                        </div>
+                    </div>
+                </div>
+
+
+
+                <div class="col-12 pt-3">
+                    <div class="form-floating">
+                        <input type="text" class="form-control" asp-for="Salary">
+                        <label asp-for="Salary">Брутна заплата</label>
+                    </div>
+                </div>
+
+
+            </div>
+
+            <div class="row pt-5">
+                <h4>Снимка</h4>
+            </div>
+
+            <hr width="30%">
+
+            <div class="input-group mb-3">
+                <input type="file" class="form-control" asp-for="ImageSrc" accept="image/*">
+            </div>
+
+            <div class="d-flex justify-content-center pt-4">
+                <button type="submit" class="btn btn-primary ">Запази</button>
+            </div>
+        </form>
+    </div>
+</div>

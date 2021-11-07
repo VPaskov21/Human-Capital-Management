@@ -1,0 +1,38 @@
+﻿@model IEnumerable<LeftEmployeeVM>
+@{
+    ViewData["Title"] = "Бивши служители";
+    Layout = "~/Views/Shared/_LayoutHR.cshtml";
+}
+<div class="container mt-3 mb-5">
+    <div class="d-flex flex-column justify-content-center align-items-center">
+        <h3>Бивши служители</h3>
+
+        <hr class="w-75">
+    </div>
+
+    <div class="row text-center justify-content-center">
+        @foreach (var person in @Model)
+        {
+            <!-- Team item -->
+            <div class="col-xxl-3 col-sm-6 mb-3">
+                <form asp-action="View_Left_Employee" method="get" class="mt-1 mb-0 h-100">
+                    <input type="hidden" name="Email" value="@(person.Email)">
+                    <button type="submit" class="submitButton w-100 h-100">
+                        <div class="d-flex flex-column align-items-center bg-white rounded shadow-sm py-4 px-3 h-100">
+                            @if (person.ImageSrc == null)
+                            {
+                                <img src="~/img/person-placeholder.jpg" alt="" width="100" class="profileImage img-fluid rounded-circle mb-3 img-thumbnail shadow-sm">
+                            }
+                            else
+                            {
+                                <img src="~/profile_images/@(person.ImageSrc)" alt="" width="100" class="profileImage img-fluid rounded-circle mb-3 img-thumbnail shadow-sm">
+                            }
+                            <h5 class="mb-0">@(person.FirstName) @(person.LastName)</h5>
+                            <span class="small text-uppercase text-muted mt-1">@(person.RoleName)</span>
+                        </div>
+                    </button>
+                </form>
+            </div><!-- End -->
+        }
+    </div>
+</div>

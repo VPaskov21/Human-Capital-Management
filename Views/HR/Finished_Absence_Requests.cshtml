@@ -1,0 +1,47 @@
+﻿@model List<AbsenceRequestVM>
+@{
+    ViewData["Title"] = "Приключени заявки за отпуска";
+    Layout = "~/Views/Shared/_LayoutHR.cshtml";
+}
+<div class="container my-3 d-flex flex-column justify-content-center align-items-center">
+    <div class="d-flex justify-content-center align-items-center">
+        <h3>Приключени заявки за отпуска</h3>
+    </div>
+    <hr class="w-75">
+
+    @if (Model.Count() > 0)
+    {
+        <div class="container table-responsive">
+            <table class="table">
+                <thead>
+                    <tr>
+                        <th scope="col">Име на служител</th>
+                        <th scope="col">Дати за отпуска</th>
+                        <th scope="col">Причина</th>
+                        <th scope="col">Статус</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var absenceRequest in @Model)
+                    {
+                        <tr>
+                            <td class="w-25 align-middle">@absenceRequest.EmployeeName</td>
+                            <td class="w-25 align-middle">@absenceRequest.FromDate.ToString("dd.MM.yyyy") - @absenceRequest.ToDate.ToString("dd.MM.yyyy")</td>
+                            <td class="w-25 align-middle">@absenceRequest.Reason</td>
+                            <td class="w-25 align-middle">@absenceRequest.Status</td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+    }
+    else
+    {
+        <div class="container">
+            <div class="d-flex justify-content-center align-items-center">
+                <h3>Няма приключени заявки за отпуска.</h3>
+            </div>
+        </div>
+    }
+
+</div>

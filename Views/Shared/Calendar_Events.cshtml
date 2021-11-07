@@ -1,0 +1,56 @@
+﻿@{
+    ViewData["Title"] = "Календар отпуски";
+    var userType = ViewData["UserType"] as UserType;
+    @if (userType.UserTypeName == "HR")
+    {
+        Layout = "~/Views/Shared/_LayoutHR.cshtml";
+    }
+    @if (userType.UserTypeName == "Employee")
+    {
+        Layout = "~/Views/Shared/_LayoutEmployee.cshtml";
+    }
+}
+<div class="container pb-5 mt-3 d-flex flex-column justify-content-center align-items-center">
+    <div class="d-flex justify-content-center align-items-center">
+        <h3>Календар отпуски</h3>
+    </div>
+
+    <hr class="w-75 mb-2">
+
+    <div class="w-75">
+        <div class="d-flex flex-column flex-xl-row justify-content-lg-center align-items-xl-center">
+            <div class="col-auto d-flex flex-md-row border rounded p-2 mb-2 me-xl-1">
+                <div class="rounded-circle" style="background-color: #38c3d9; height:25px; width: 25px;"></div>
+                <div class="ps-2">Платена Отпуска</div>
+            </div>
+            <div class="col-auto d-flex flex-md-row border rounded p-2 mb-2 me-xl-1">
+                <div class="rounded-circle" style="background-color: #ff6961; height:25px; width: 25px;"></div>
+                <div class="ps-2">Неплатена Отпуска</div>
+            </div>
+            <div class="col-auto d-flex flex-md-row border rounded p-2 mb-2 me-xl-1">
+                <div class="rounded-circle" style="background-color: #e1ad01; height:25px; width: 25px;"></div>
+                <div class="ps-2">Болничен</div>
+            </div>
+            <div class="col-auto d-flex flex-md-row border rounded p-2 mb-2 me-xl-1">
+                <div class="rounded-circle" style="background-color: #6f2da8; height:25px; width: 25px;"></div>
+                <div class="ps-2">Друга причина</div>
+            </div>
+            <div class="col-auto d-flex flex-md-row border rounded p-2 mb-2">
+                <div class="rounded-circle" style="background-color: #32a852; height:25px; width: 25px;"></div>
+                <div class="ps-2">Почивен ден</div>
+            </div>
+        </div>
+    </div>
+
+    <div class="w-75 pb-4">
+        <div id="calendar"></div>
+    </div>
+</div>
+
+@section scripts {
+    <link href='~/css/fullcalendar/main.css' rel='stylesheet' />
+    <script src='~/js/fullcalendar/main.js'></script>
+    <script src='~/js/fullcalendar/bg.js'></script>
+
+    <link href="https://cdn.jsdelivr.net/npm/@@fortawesome/fontawesome-free@5.13.1/css/all.css" rel='stylesheet'>
+}

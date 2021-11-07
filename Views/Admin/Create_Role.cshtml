@@ -1,0 +1,100 @@
+﻿@{
+    ViewData["Title"] = "Създай отдел";
+    Layout = "~/Views/Shared/_LayoutAdmin.cshtml";
+
+    var departments = ViewData["Departments"] as IEnumerable<Department>;
+    var info = ViewData["Information"];
+}
+@if (info != null)
+{
+    @if (info.Equals("RoleDuplicate"))
+    {
+        <div class="w-75 alert alert-info d-flex align-items-center justify-content-center" role="alert" id="alert1">
+            Съществува длъжност със същото име.
+        </div>
+    }
+
+    @if (info.Equals("RoleCreated"))
+    {
+        <div class="w-75 alert alert-success d-flex align-items-center justify-content-center" role="alert">
+            Длъжността е създадена успешно.
+        </div>
+    }
+
+    @if (info.Equals("ValidationFailed"))
+    {
+        <div class="w-75 alert alert-info d-flex align-items-center justify-content-center" role="alert">
+            Има грешка във въведените от вас данни и не могат да бъдат обработени.
+        </div>
+    }
+
+    @if (info.Equals("Error"))
+    {
+        <div class="w-75 alert alert-danger d-flex align-items-center justify-content-center" role="alert">
+            Случи се грешка при завършване на действието.
+        </div>
+    }
+}
+
+<div class="d-flex justify-content-center align-items-center">
+    <h3>Създай нова длъжност</h3>
+</div>
+<hr class="w-75">
+
+<div class="w-75 p-4 d-flex flex-column">
+    <form asp-action="Submit_Role" id="createRoleForm">
+        <div class="row">
+            <h4>Информация за длъжността</h4>
+        </div>
+
+        <hr width="30%">
+
+        <div class="col-12 pt-3">
+            <div class="form-floating">
+                <input type="text" class="form-control" placeholder="Име на длъжност" id="RoleName" name="Role">
+                <label for="RoleName">Име на длъжност</label>
+            </div>
+        </div>
+
+        <div class="row pt-3">
+            <div class="col-md">
+                <div class="form-floating">
+                    <input type="text" class="form-control" placeholder="Минимална заплата" name="MinSalary" id="MinSalary" required>
+                    <label for="MinSalary">Минимална заплата</label>
+                </div>
+            </div>
+
+            <div class="col-md">
+                <div class="form-floating">
+                    <input type="text" class="form-control" placeholder="Максимална заплата" name="MaxSalary" id="MaxSalary">
+                    <label for="MaxSalary">Максимална заплата</label>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-12 pt-3">
+            <div class="form-floating">
+                <select class="form-select pt-2" id="selectDepartment" name="Department" required>
+                    <option value="Избери отдел" hidden>Избери отдел</option>
+                    @foreach (var dep in @departments)
+                    {
+                        <option value="@(dep.Id)">@dep.DepartmentName</option>
+                    }
+                </select>
+            </div>
+        </div>
+
+        <div class="col-12 pt-3" id="divCheckbox">
+            <div class="form-check">
+                <input class="form-check-input" type="checkbox" id="checkboxHR" name="HR">
+                <label class="form-check-label" for="checkboxHR">
+                    Достъп до функционалностите за човешки ресурси
+                </label>
+            </div>
+        </div>
+
+        <div class="d-flex justify-content-center pt-4">
+            <button type="submit" class="btn btn-primary">Създай</button>
+        </div>
+    </form>
+</div>
