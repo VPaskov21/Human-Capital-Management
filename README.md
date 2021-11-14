@@ -43,7 +43,7 @@ Admin is special user in the application. The admin can:
 ### Installing
 1. Clone the repo
 ````
-git clone https://github.com/VPaskov21/Immedis_internship_2021_hcm_Viktor_Paskov.git
+git clone https://github.com/VPaskov21/Human-Capital-Management.git
 ````
 
 2. Change the DefaultConnectionString in appsettings.json
@@ -54,7 +54,7 @@ docker build -t <docker-image-name> .
 ````
 ex.
 ````
-docker build -t immedis-hcmapp .
+docker build -t hcmapp .
 ````
 
 4. Create container for the application
@@ -63,7 +63,7 @@ docker create --name <docker-container-name> -p <port> <docker-image-name>
 ````
 ex.
 ````
-docker create --name hcm-container -p 8080:80 immedis-hcmapp
+docker create --name hcm-container -p 8080:80 hcmapp
 ````
 
 5. Run the container
